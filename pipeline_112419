@@ -1,0 +1,35 @@
+#!/bin/bash
+
+echo hello-world2!
+export BOWTIE2_INDEXES=/home/kehan/Desktop/ChIP-seq/sp_bowtie2_index/
+
+MYDIR="/home/kehan/Desktop/ChIP-seq/K9M"
+OUTPUT="/home/kehan/Desktop/ChIP-seq/K9M/output/single/"
+
+cd $MYDIR
+ls
+
+
+echo start looping 
+
+#for d in */;
+d="Sample_RES15-16-P03-ChIP-cs161-flag-ChIP"
+#do
+	echo $d
+	
+	cd $d
+	NAME=${PWD##*/}_R1
+	#bowtie2 -p 4 -x sp_bowtie2 -1 R1*.fastq.gz -2 R2*.fastq.gz -S $NAME.sam
+	#try single end mode
+	bowtie2 -p 4 -x sp_bowtie2 -U R1*.fastq.gz -S $NAME.sam
+	echo running samtools
+	samtools view -@ 3 -bSo $NAME.bam $NAME.sam
+	samtools sort -@ 3 $NAME.bam -o  $NAME-sorted.bam
+	samtools index -@ 3 $NAME-sorted.bam 
+	echo running deeptools
+	bamCoverage -b $NAME-sorted.bam -o $NAME-sorted.bw -bs 25 -p max --normalizeUsing CPM
+	mv *.bw $OUTPUT
+	rm $NAME.sam
+	cd ..
+	
+#done

@@ -1,0 +1,33 @@
+#!/bin/bash
+
+echo hello-world2!
+
+MYDIR="/media/kehan/D234744C34743617/basespace/KB_ChIPSeq_2-140922782/FASTQ_Generation_2019-09-14_09_37_12Z-192642466/Analysis"
+
+cd $MYDIR
+ls
+
+
+echo start looping 
+
+for d in $(seq 2 30);
+do
+	
+	curNum=$d
+	echo $curNum
+	
+	current_date_time="`date +%Y%m%d%H%M%S`";
+	echo "Current Time: " $current_date_time;
+	
+	echo "running bowtie"
+	bowtie -S --threads 2 sp_bowtie_index/sp KB-R2-$curNum.fastq.gz > KB-R2-$curNum.sam
+	echo "running samtools"
+	samtools view -@ 3 -bSo KB-R2-$curNum.bam KB-R2-$curNum.sam
+	samtools sort -@ 3 KB-R2-$curNum.bam -o KB-R2-$curNum.sorted.bam
+	samtools index -@ 3 KB-R2-$curNum.sorted.bam
+	echo "running deeptools"
+	bamCoverage -b KB-R2-$curNum.sorted.bam -o KB-R2-$curNum.bw -bs 25 -p max --normalizeUsing CPM
+done
+
+
+

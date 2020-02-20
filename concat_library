@@ -1,0 +1,21 @@
+#!/bin/bash
+
+echo hello-world2!
+
+MYDIR="/home/kehan/Desktop/ChIP-seq/K9M"
+
+
+cd $MYDIR
+ls
+
+
+echo start looping 
+
+for d in */;
+do
+	echo $d
+	#NAME=${PWD##*/}.test
+	#echo $NAME
+	(cd $d && NAME=${PWD##*/} && cat *R1_*.fastq.gz > R1_$NAME.fastq.gz );
+	(cd $d && NAME=${PWD##*/} && cat *R2_*.fastq.gz > R2_$NAME.fastq.gz );
+done

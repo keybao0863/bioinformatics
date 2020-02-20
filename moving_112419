@@ -1,0 +1,21 @@
+#!/bin/bash
+
+echo hello-world2!
+
+MYDIR="/home/kehan/Desktop/ChIP-seq/K9M"
+Output="/home/kehan/Desktop/ChIP-seq/K9M/output/"
+
+cd $MYDIR
+ls
+
+
+echo start looping 
+
+for d in */;
+do
+	echo $d
+	#NAME=${PWD##*/}.test
+	#echo $NAME
+	(cd $d && NAME=${PWD##*/} && mv *.bw $Output);
+	
+done

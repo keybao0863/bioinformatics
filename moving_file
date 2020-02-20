@@ -1,0 +1,24 @@
+#!/bin/bash
+
+echo hello-world2!
+
+MYDIR="/home/kehan/Desktop/ChIP-seq/ChIP-seq_051019/KB-130412282/Concat"
+
+cd $MYDIR
+ls
+
+
+echo start looping 
+
+for d in $(seq 1 9);
+do
+	echo $d
+	(cd "KB0$d" &&  mv "KB0$d.fastq.gz" /home/kehan/Desktop/ChIP-seq/ChIP-seq_051019/KB-130412282/Analysis);
+done
+
+
+for d in $(seq 10 22);
+do
+	echo $d
+	(cd "KB$d" &&  mv "KB$d.fastq.gz" /home/kehan/Desktop/ChIP-seq/ChIP-seq_051019/KB-130412282/Analysis);
+done

@@ -1,0 +1,37 @@
+#!/bin/bash
+
+echo hello-world2!
+
+MYDIR="/home/kehan/Desktop/ChIP-seq/ChIP-seq_051019/KB-130412282/Analysis"
+
+cd $MYDIR
+ls
+
+
+echo start looping 
+
+for d in $(seq 4 22);
+do
+	if [ $d -lt 10 ]
+	then
+		#echo 0$d
+		curNum=0$d
+	else
+		#echo $d
+		curNum=$d
+	fi
+	echo $curNum
+	
+	current_date_time="`date +%Y%m%d%H%M%S`";
+	echo "Current Time: " $current_date_time;
+	
+	echo "running bowtie"
+	bowtie -S --threads 2 sp_bowtie_index/sp KB$curNum.fastq.gz > KB$curNum.sam
+	echo "running samtools"
+	samtools view -@ 3 -bSo KB$curNum.bam KB$curNum.sam
+	samtools sort -@ 3 KB$curNum.bam -o KB$curNum.sorted.bam
+	samtools index -@ 3 KB$curNum.sorted.bam
+done
+
+
+
